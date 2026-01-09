@@ -13,15 +13,16 @@ const Dashboard = ({ onBack }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
 
-  // 💰 MONEY LOGIC: 5 MB LIMIT
+  // 💰 MONEY LOGIC
   const totalSizeMB = files.reduce((acc, file) => acc + file.size, 0) / (1024 * 1024);
-  const isOverLimit = totalSizeMB > 5; 
+  const isOverFreeLimit = totalSizeMB > 5; 
+  const isOverProLimit = totalSizeMB > 50;
 
   const handleGenerateClick = () => {
     if (files.length === 0) return alert("Please upload evidence first.");
     
     // Trigger Paywall if over 5 MB
-    if (isOverLimit) {
+    if (isOverFreeLimit) {
       setShowPaywall(true);
       return;
     }
@@ -68,7 +69,7 @@ const Dashboard = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-100 font-sans selection:bg-teal-500/30 relative">
       
-      {/* PAYWALL POPUP ($9.99 for > 5MB) */}
+      {/* PAYWALL POPUP */}
       {showPaywall && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0B1121] border border-teal-500 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center">
@@ -79,14 +80,14 @@ const Dashboard = ({ onBack }) => {
               The free limit is <strong>5 MB</strong>.
             </p>
             <div className="bg-slate-900/50 p-4 rounded-xl mb-6 text-left border border-slate-800">
-               <div className="text-sm font-bold text-teal-400 mb-1">PRO PLAN INCLUDES:</div>
+               <div className="text-sm font-bold text-teal-400 mb-1">PRO PLAN ($9.99)</div>
                <ul className="text-sm text-slate-300 space-y-2">
                  <li>✅ Upload up to <strong>50 MB</strong></li>
                  <li>✅ Priority Processing</li>
                </ul>
             </div>
             <button className="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#020617] font-bold mb-3">
-              Upgrade for $9.99
+              Upgrade Now
             </button>
             <button onClick={() => setShowPaywall(false)} className="text-sm text-slate-500 hover:text-white">Cancel</button>
           </div>
@@ -135,11 +136,16 @@ const Dashboard = ({ onBack }) => {
                {files.length > 0 && (
                  <div className="mt-4 space-y-2">
                    <div className="flex justify-between text-xs text-slate-400">
-                      <span>Total: {totalSizeMB.toFixed(1)} MB / 5 MB Free Limit</span>
-                      {isOverLimit && <span className="text-red-400 font-bold">Over Limit ($9.99)</span>}
+                      {/* DYNAMIC TEXT FIX */}
+                      <span>Total: {totalSizeMB.toFixed(1)} MB / <span className={isOverFreeLimit ? "text-teal-400 font-bold" : "text-slate-400"}>{isOverFreeLimit ? "50 MB (Pro)" : "5 MB (Free)"}</span></span>
+                      {isOverFreeLimit && <span className="text-red-400 font-bold flex items-center gap-1"><Lock className="w-3 h-3"/> Pro Required</span>}
                    </div>
+                   {/* DYNAMIC BAR FIX */}
                    <div className="h-1 bg-slate-800 rounded overflow-hidden">
-                      <div className={`h-full ${isOverLimit ? 'bg-red-500' : 'bg-teal-500'}`} style={{width: `${Math.min((totalSizeMB/5)*100, 100)}%`}}></div>
+                      <div 
+                        className={`h-full ${isOverFreeLimit ? 'bg-red-500' : 'bg-teal-500'} transition-all duration-500`} 
+                        style={{width: `${Math.min((totalSizeMB / (isOverFreeLimit ? 50 : 5)) * 100, 100)}%`}}
+                      ></div>
                    </div>
                    {files.map((f, i) => (
                      <div key={i} className="flex justify-between p-3 bg-[#0B1121] rounded border border-slate-800">
@@ -163,9 +169,9 @@ const Dashboard = ({ onBack }) => {
                 <button 
                   onClick={handleGenerateClick} 
                   disabled={isGenerating} 
-                  className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 ${isOverLimit ? 'bg-red-500 hover:bg-red-400 text-white' : 'bg-teal-500 hover:bg-teal-400 text-[#020617]'}`}
+                  className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2 ${isOverFreeLimit ? 'bg-red-500 hover:bg-red-400 text-white' : 'bg-teal-500 hover:bg-teal-400 text-[#020617]'}`}
                 >
-                   {isGenerating ? <><Loader2 className="animate-spin"/> Processing...</> : (isOverLimit ? <><Lock className="w-5 h-5"/> Unlock to Generate</> : "Generate PDF Binder")}
+                   {isGenerating ? <><Loader2 className="animate-spin"/> Processing...</> : (isOverFreeLimit ? <><Lock className="w-5 h-5"/> Unlock to Generate</> : "Generate PDF Binder")}
                 </button>
              </div>
           </div>
