@@ -13,14 +13,14 @@ const Dashboard = ({ onBack }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
 
-  // LOGIC: Calculate Size
+  // 💰 MONEY LOGIC: 5 MB LIMIT
   const totalSizeMB = files.reduce((acc, file) => acc + file.size, 0) / (1024 * 1024);
-  const isOverLimit = totalSizeMB > 10;
+  const isOverLimit = totalSizeMB > 5; // Changed from 10 to 5 as requested
 
   const handleGenerateClick = () => {
     if (files.length === 0) return alert("Please upload evidence first.");
     
-    // 💰 LOGIC: Paywall if > 10MB
+    // Trigger Paywall if over 5 MB
     if (isOverLimit) {
       setShowPaywall(true);
       return;
@@ -69,7 +69,7 @@ const Dashboard = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-100 font-sans selection:bg-teal-500/30 relative">
       
-      {/* PAYWALL POPUP */}
+      {/* PAYWALL POPUP ($9.99 for > 5MB) */}
       {showPaywall && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0B1121] border border-teal-500 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center">
@@ -77,7 +77,7 @@ const Dashboard = ({ onBack }) => {
             <h2 className="text-2xl font-bold text-white mb-2">File Limit Exceeded</h2>
             <p className="text-slate-400 mb-6">
               Your files are <strong>{totalSizeMB.toFixed(1)} MB</strong>.<br/>
-              Free limit is 10 MB.
+              The free limit is <strong>5 MB</strong>.
             </p>
             <button className="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#020617] font-bold mb-3">
               Upgrade for $9.99
@@ -131,11 +131,11 @@ const Dashboard = ({ onBack }) => {
                {files.length > 0 && (
                  <div className="mt-4 space-y-2">
                    <div className="flex justify-between text-xs text-slate-400">
-                      <span>Total: {totalSizeMB.toFixed(1)} MB / 10 MB Limit</span>
-                      {isOverLimit && <span className="text-red-400 font-bold">Over Limit</span>}
+                      <span>Total: {totalSizeMB.toFixed(1)} MB / 5 MB Free Limit</span>
+                      {isOverLimit && <span className="text-red-400 font-bold">Over Limit ($9.99)</span>}
                    </div>
                    <div className="h-1 bg-slate-800 rounded overflow-hidden">
-                      <div className={`h-full ${isOverLimit ? 'bg-red-500' : 'bg-teal-500'}`} style={{width: `${Math.min((totalSizeMB/10)*100, 100)}%`}}></div>
+                      <div className={`h-full ${isOverLimit ? 'bg-red-500' : 'bg-teal-500'}`} style={{width: `${Math.min((totalSizeMB/5)*100, 100)}%`}}></div>
                    </div>
                    {files.map((f, i) => (
                      <div key={i} className="flex justify-between p-3 bg-[#0B1121] rounded border border-slate-800">
@@ -215,7 +215,7 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </div>
 
-      {/* HOW IT WORKS (Restored) */}
+      {/* HOW IT WORKS */}
       <div className="bg-[#0B1121] py-24 border-t border-slate-800">
         <div className="container mx-auto px-6">
            <div className="text-center mb-16">
@@ -241,7 +241,7 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </div>
 
-      {/* PRICING */}
+      {/* PRICING SECTION */}
       <div className="py-24 border-t border-slate-800 bg-[#020617]">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16">
@@ -253,7 +253,7 @@ const LandingPage = ({ onGetStarted }) => {
               <h3 className="text-xl font-bold text-white mb-2">Free Starter</h3>
               <div className="flex items-baseline gap-1 mb-6"><span className="text-4xl font-bold text-white">$0</span><span className="text-slate-500">/ forever</span></div>
               <ul className="space-y-3 mb-8 text-slate-300 text-sm">
-                 <li className="flex gap-2"><CheckCircle2 className="w-5 h-5 text-teal-500" /> Up to 10 MB Uploads</li>
+                 <li className="flex gap-2"><CheckCircle2 className="w-5 h-5 text-teal-500" /> Up to 5 MB Uploads</li>
                  <li className="flex gap-2"><CheckCircle2 className="w-5 h-5 text-teal-500" /> 1 PDF Binder Generation</li>
               </ul>
               <button onClick={onGetStarted} className="w-full py-3 rounded-xl border border-slate-700 hover:bg-slate-800 text-white font-bold">Use for Free</button>
