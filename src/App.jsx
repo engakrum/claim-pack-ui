@@ -5,7 +5,7 @@ import {
   Zap, Lock, ChevronDown, ChevronUp
 } from "lucide-react";
 
-/* --- DASHBOARD COMPONENT (The Tool) --- */
+/* --- DASHBOARD COMPONENT --- */
 const Dashboard = ({ onBack }) => {
   const [files, setFiles] = useState([]);
   const [category, setCategory] = useState("General Dispute");
@@ -15,7 +15,7 @@ const Dashboard = ({ onBack }) => {
 
   // 💰 MONEY LOGIC: 5 MB LIMIT
   const totalSizeMB = files.reduce((acc, file) => acc + file.size, 0) / (1024 * 1024);
-  const isOverLimit = totalSizeMB > 5; // Changed from 10 to 5 as requested
+  const isOverLimit = totalSizeMB > 5; 
 
   const handleGenerateClick = () => {
     if (files.length === 0) return alert("Please upload evidence first.");
@@ -36,7 +36,6 @@ const Dashboard = ({ onBack }) => {
     formData.append('summary', summary);
 
     try {
-      // Connects to your live backend
       const response = await fetch('https://claim-pack-backend.onrender.com/api/upload', {
         method: 'POST',
         body: formData,
@@ -55,7 +54,7 @@ const Dashboard = ({ onBack }) => {
         alert("Server Error. The backend might be waking up (Free Tier). Wait 60 seconds and try again.");
       }
     } catch (error) {
-      alert("Network Error: Could not reach server. The backend is likely still building or sleeping. Please check Render Dashboard.");
+      alert("Network Error: Could not reach server. Please check Render Dashboard.");
     } finally {
       setIsGenerating(false);
     }
@@ -79,6 +78,13 @@ const Dashboard = ({ onBack }) => {
               Your files are <strong>{totalSizeMB.toFixed(1)} MB</strong>.<br/>
               The free limit is <strong>5 MB</strong>.
             </p>
+            <div className="bg-slate-900/50 p-4 rounded-xl mb-6 text-left border border-slate-800">
+               <div className="text-sm font-bold text-teal-400 mb-1">PRO PLAN INCLUDES:</div>
+               <ul className="text-sm text-slate-300 space-y-2">
+                 <li>✅ Upload up to <strong>50 MB</strong></li>
+                 <li>✅ Priority Processing</li>
+               </ul>
+            </div>
             <button className="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#020617] font-bold mb-3">
               Upgrade for $9.99
             </button>
@@ -105,7 +111,6 @@ const Dashboard = ({ onBack }) => {
       <main className="container mx-auto px-6 py-12 max-w-6xl">
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7 space-y-8">
-            {/* 1. Details */}
             <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
                <h3 className="text-lg font-bold text-white mb-4">1. Case Details</h3>
                <select className="w-full bg-[#0B1121] border border-slate-700 rounded-xl p-4 mb-4 text-white" value={category} onChange={e=>setCategory(e.target.value)}>
@@ -117,7 +122,6 @@ const Dashboard = ({ onBack }) => {
                <textarea value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="What happened?" className="w-full h-32 bg-[#0B1121] border border-slate-700 rounded-xl p-4 text-white focus:border-teal-500 outline-none" />
             </div>
 
-            {/* 2. Upload */}
             <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
                <h3 className="text-lg font-bold text-white mb-4">2. Upload Evidence</h3>
                <div onDrop={handleDrop} onDragOver={(e) => e.preventDefault()} className="border-2 border-dashed border-slate-700 bg-[#0B1121] rounded-xl p-10 text-center hover:border-teal-500/30 transition-all">
@@ -148,7 +152,6 @@ const Dashboard = ({ onBack }) => {
             </div>
           </div>
 
-          {/* 3. Generate */}
           <div className="lg:col-span-5">
              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl">
                 <h3 className="text-lg font-bold text-white mb-4">Summary</h3>
@@ -172,7 +175,7 @@ const Dashboard = ({ onBack }) => {
   );
 };
 
-/* --- LANDING PAGE (Marketing) --- */
+/* --- LANDING PAGE --- */
 const LandingPage = ({ onGetStarted }) => {
   const [openFaq, setOpenFaq] = useState(null);
   const faqs = [
