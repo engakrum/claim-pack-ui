@@ -144,7 +144,7 @@ const Dashboard = ({ onBack }) => {
   );
 };
 
-/* --- LANDING PAGE (HERO + PRICING + FAQ) --- */
+/* --- LANDING PAGE --- */
 const LandingPage = ({ onGetStarted }) => {
   const [openFaq, setOpenFaq] = useState(null);
   const faqs = [
@@ -214,7 +214,7 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </div>
 
-      {/* FAQ SECTION (ADDED) */}
+      {/* FAQ SECTION */}
       <div className="py-24 border-t border-slate-800 bg-[#020617]">
         <div className="container mx-auto px-6 max-w-3xl">
           <div className="text-center mb-16">
@@ -241,6 +241,29 @@ const LandingPage = ({ onGetStarted }) => {
           </div>
         </div>
       </div>
+
+      {/* FOOTER SECTION (RESTORED FROM SCREENSHOT) */}
+      <footer className="border-t border-slate-800 bg-[#020617] pt-16 pb-8">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div className="flex items-center gap-2 font-bold text-xl mb-4 md:mb-0">
+               <div className="w-8 h-8 rounded-lg bg-teal-500/20 flex items-center justify-center"><FileText className="w-5 h-5 text-teal-400" /></div>
+               <span>ClaimPack</span>
+            </div>
+            <div className="flex gap-8 text-slate-400 text-sm">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Contact</a>
+            </div>
+            <div className="text-slate-500 text-sm mt-4 md:mt-0">
+              © 2026 ClaimPack. All rights reserved.
+            </div>
+          </div>
+          <div className="text-center text-xs text-slate-600 max-w-2xl mx-auto leading-relaxed border-t border-slate-800/50 pt-8">
+            ClaimPack is a document organization tool and does not provide legal advice. Consult with a qualified attorney for legal matters. Results may vary depending on your specific situation.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
